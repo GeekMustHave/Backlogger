@@ -71,3 +71,6 @@ typings/
 
 # dotenv environment variables file
 .env
+
+#dont need local db file changes
+localDB/
