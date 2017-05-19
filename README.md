@@ -1,6 +1,10 @@
-[![Backlogger Logo](https://github.com/GeekMustHave/Backlogger/blob/master/public/images/IMG_5011.JPG =250x)]
+<p align="center">
+<img src="https://github.com/GeekMustHave/Backlogger/blob/master/public/images/IMG_5011.JPG" width="200">
+</p>
 
-  Simple web application for tracking backlogs and ideas.
+## Backlogger
+
+  Simple web application to track ideas/brain farts for features and functions for a computer/web application. This uses RFS design criteria.
 
 ## Installation
 
@@ -26,17 +30,17 @@ $ npm start
 
 ### Security Issues
 
-If you discover a security vulnerability in Express, please contact John.schuster@optum.com.
+If you discover a security vulnerability in Express, please contact John.schuster@phoenixworkgroup.com.
 
 ## Quick Start
 
   The quickest way to get started is after the installation, point your browser to http://localhost:3000
 
-  Use the secret key you have been provided. (Or create one in localDB/appconstants.db)
+  Use the secret key you have been provided. (Or create one by uncommenting the /signup route.)
 
 ## People
 
-Authors [Greg Simpson](https://github.com/simpsong)
+Authors [Greg Simpson](https://github.com/simpsong) & [John Schuster](https://github.com/GeekMustHave)
 
 ## License
 

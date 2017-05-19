@@ -89,8 +89,8 @@ $(function() {
 
     $('#mdlViewDetails').on('show.bs.modal', function (event) {
         var retData;
-        var button = $(event.relatedTarget) // Button that triggered the modal
-        var backlogId = button.data('backlogid') // Extract info from data-* attributes
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var backlogId = button.data('backlogid'); // Extract info from data-* attributes
         // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
         // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
         $.ajax({
@@ -102,8 +102,18 @@ $(function() {
             //retData = response;
             var modal = $('#mdlViewDetails');
             var date = new Date(response.insertdate);
+            var resolvedDate = '';
+
+            $('#btnUpdateResolved').attr('data-backlogid', backlogId);
+            if (response.resolveddate != null){
+                resolvedDate = getDateFormatted(new Date(response.resolveddate));
+                $('#btnUpdateResolved').hide();
+            }
+            else
+                $('#btnUpdateResolved').show();
             modal.find('.modal-title').text('Backlog Details');
             modal.find('.modal-body #backlogDate').text(getDateFormatted(date));
+            modal.find('.modal-body #resolvedDate').text(resolvedDate);
             modal.find('.modal-body #backlogPerson').text(response.person);
             modal.find('.modal-body #backlogFuncArea').text(response.functionalarea);
             var txtHtml = response.idea.replace(/(\r\n|\n|\r)/g,"<br />");
@@ -151,6 +161,30 @@ $(function() {
             });
             $('#menuFuncArea').selectpicker('refresh');
         });
+    });
+    //submit Ajax call to update resolved date
+    $("#btnUpdateResolved").click(function(event) {
+        event.preventDefault();
+        var backlogId = $("#btnUpdateResolved").data('backlogid');
+        console.log('--- I CAME EHERE');
+        console.log(backlogId);
+        var data = {};
+        data.resolveddate =  getDateFormatted(new Date());
+        $.ajax({
+            type: 'PATCH',
+            url: "/backlogs/" + backlogId,
+            data: data,
+            dataType: 'json'
+        }).done(function (response){
+            console.log(response);
+            //We are cheating instead of reloading from DB. change this in future if custom resolved date is needed.
+            //finally update the Resolved Date to today and disable the button.
+            var modal = $('#mdlViewDetails');
+            var resolvedDate = getDateFormatted(new Date());
+            modal.find('.modal-body #resolvedDate').text(resolvedDate);
+            $('#btnUpdateResolved').hide();
+        });
+         
     });
 
     //Form submit Ajax call

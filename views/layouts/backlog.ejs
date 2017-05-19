@@ -15,10 +15,10 @@
                   <td style="width:35%;">
                     <%= moment(backlog.insertdate).format('MM/DD/YYYY h:mm:ss a') %>
                   </td>
-                  <td align="right" style="width:10%;font-weight:bold;padding-right:20px;">
+                  <td align="right" style="width:10%;font-weight:bold;">
                   	Person:
                   </td>
-                  <td> 
+                  <td style="padding-left:20px;"> 
                     <%= backlog.person %>
                   </td>
                 </tr>
@@ -29,9 +29,14 @@
                   <td>
                     <%= backlog.functionalarea %>
                   </td>
-                  <td align="right" style="font-weight:bold;padding-right:20px;">
+                  <td align="right" style="font-weight:bold;">
+                    Resolved Date:
                   </td>
-                  <td></td>
+                  <td style="padding-left:20px;">
+                    <% if (backlog.resolveddate != null) { %> 
+                      <%= moment(backlog.resolveddate).format('MM/DD/YYYY') %> 
+                    <% } %>
+                  </td>
                 </tr>
                 <tr>
                 	<td align="right" style="font-weight:bold;padding-right:20px;">

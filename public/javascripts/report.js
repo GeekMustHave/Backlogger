@@ -20,6 +20,8 @@ function FilterBacklogs(){
     data.daterange = $('#inpBacklogDateRange').val();
     data.sortfield = $('#menuSortOn').val();
     data.sortorder = $('#menuSortOrder').val();
+    data.resolved = $('#menuResolved').val();
+    console.log(data);
     $.ajax({
         type: 'GET',
         url: '/backlogsfilterandsort',
@@ -35,7 +37,12 @@ function PresetControls(){
     PresetDateRange('inpBacklogDateRange');
     RefreshPersons();
     RefreshFunctionalAreas();
-    $('#inpIdea').text('');
+    $('#inpIdea').val('');
+    $("#menuResolved").val('').selectpicker('refresh');
+    $("#menuSortOn").val('').selectpicker('refresh');
+    $("#menuSortOrder").val('').selectpicker('refresh');
+    $('#menuPersons').val('').selectpicker('refresh');
+    $('#menuFunctionalAreas').val('').selectpicker('refresh');
 }
 function PresetDateRange(dtRangeID){
     var id= "#"+dtRangeID+"";
@@ -71,7 +78,7 @@ function RefreshPersons(){
             var liHtml = '<option>'+ value.name +'</option>';
             $("#menuPersons").append(liHtml);
         });
-        $('#menuPersons').selectpicker('refresh');
+        $('#menuPersons').val('').selectpicker('refresh');
     });
 }
 function RefreshFunctionalAreas(){
@@ -86,6 +93,6 @@ function RefreshFunctionalAreas(){
             var liHtml = '<option>'+ value.name +'</option>';
             $("#menuFunctionalAreas").append(liHtml);
         });
-        $('#menuFunctionalAreas').selectpicker('refresh');
+        $('#menuFunctionalAreas').val('').selectpicker('refresh');
     });
 }

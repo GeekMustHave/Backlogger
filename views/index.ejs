@@ -128,9 +128,15 @@
         <div class="modal-body">
           	<form class="form-horizontal">
 	          <div class="form-group">
-	            <label for="backlogDate" class="form-control-label col-xs-3">Date:</label>
+	            <label for="backlogDate" class="form-control-label col-xs-3">Backlog Date:</label>
 	            <div class="col-xs-9">
 	            	<span id="backlogDate"></span>
+	            </div>
+	          </div>
+	          <div class="form-group">
+	            <label for="backlogDate" class="form-control-label col-xs-3">Resolved Date:</label>
+	            <div class="col-xs-9">
+	            	<span id="resolvedDate"></span>
 	            </div>
 	          </div>
 	          <div class="form-group">
@@ -154,6 +160,8 @@
         	</form>
         </div>
         <div class="modal-footer">
+          <button id="btnUpdateResolved" type="button" class="btn btn-primary">Resolve</button>
+          &nbsp;
           <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
         </div>
       </div>

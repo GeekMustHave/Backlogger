@@ -78,6 +78,37 @@ module.exports = function(app, passport) {
             });
         }
     });
+    //PATCH - partial  (delta) updates to Backlog
+    app.patch('/backlogs/:backlogId',isLoggedIn, function(req,res){
+        var backlogId = req.params.backlogId;
+        var filters = {};
+        if(req.body.person)
+            filters.person = req.body.person;
+        if(req.body.functionalarea)
+            filters.functionalarea = req.body.functionalarea;
+        if(req.body.idea)
+            filters.idea = req.body.idea;
+        if(req.body.resolveddate)
+            filters.resolveddate = new Date(req.body.resolveddate);
+
+        if(Object.keys(filters).length ==0  || backlogId ==''){
+            res.json({message: 'Backlog failed to update!'});
+        }
+        else
+        {
+            // Set an existing field's value
+            db.backlogs.update({ '_id': backlogId}, { $set: filters }, { multi: false }, function (err, numReplaced) {
+                if (err) {
+                  return res.json({message: 'Backlog failed to update.!'});
+                }
+                if(numReplaced == 0){
+                   return res.json({message: 'Backlog failed to update'});
+                }
+                res.json({message: 'Backlog updated.'});
+            });
+        }
+    });
+
     // =================================================
     // POST to check admin password
     // =================================================
@@ -258,6 +289,14 @@ module.exports = function(app, passport) {
             var strtDate = new Date(momentJS(dates[0], 'MM-DD-YYYY').format('YYYY/MM/DD'));
             var endDate = new Date(momentJS(dates[1], 'MM-DD-YYYY').add(1,'days').format('YYYY/MM/DD'));
             filters.insertdate = { $gte : strtDate, $lt : endDate};
+        }
+        if(req.query.resolved !=''){
+            if(req.query.resolved == 'no'){
+                filters.resolveddate = null;
+            }
+            else{
+                filters.resolveddate = { $ne: null};
+            }
         }
 
         var sortfilter ={};
