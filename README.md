@@ -1,4 +1,4 @@
-![Backlogger Logo](./public/images/IMG_5011.JPG =250x)
+![Backlogger Logo](https://github.com/GeekMustHave/Backlogger/blob/master/public/images/IMG_5011.JPG =250x)
 
   Simple web app for tracking backlogs,ideas.
 
