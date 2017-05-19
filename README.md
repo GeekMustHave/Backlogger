@@ -1,8 +1,6 @@
-[![Backlogger Logo](http://backlogger.us-west-2.elasticbeanstalk.com/images/IMG_5011.JPG)]
+![Backlogger Logo](http://backlogger.us-west-2.elasticbeanstalk.com/images/IMG_5011.JPG)
 
   Simple web app for tracking backlogs,ideas.
-
-  [![NPM Version][npm-image]][npm-url]
 
 
 ## Installation
