@@ -1,0 +1,58 @@
+<div id="divReport" class="container-fluid">
+  Total records found: <%= backlogs.length %>
+  <div class="table-responsive">         
+  <table class="table table-bordered table-hover">
+    <tbody>
+    <% backlogs.forEach(function(backlog){ %>
+      <tr>
+      	<td>
+        	<table style="width:100%;">
+          	<tbody>
+                <tr>
+                  <td align="right" style="width:15%;font-weight:bold;padding-right:20px;">
+                  	Backlog Date:
+                  </td>
+                  <td style="width:35%;">
+                    <%= moment(backlog.insertdate).format('MM/DD/YYYY h:mm:ss a') %>
+                  </td>
+                  <td align="right" style="width:10%;font-weight:bold;padding-right:20px;">
+                  	Person:
+                  </td>
+                  <td> 
+                    <%= backlog.person %>
+                  </td>
+                </tr>
+                 <tr>
+                  <td align="right" style="font-weight:bold;padding-right:20px;">
+                  	Functional Area:
+                  </td>
+                  <td>
+                    <%= backlog.functionalarea %>
+                  </td>
+                  <td align="right" style="font-weight:bold;padding-right:20px;">
+                  </td>
+                  <td></td>
+                </tr>
+                <tr>
+                	<td align="right" style="font-weight:bold;padding-right:20px;">
+                  	Idea:
+                  </td>
+                  <td colspan="3">
+                    <%- backlog.idea.replace(/(\r\n|\n|\r)/g,"<br />"); %>
+                  </td>
+                </tr>
+                <!--<tr>
+                  <td colspan="4" style="padding-top:0px;">
+                    <hr />
+                  <td>
+                </tr> -->
+                
+              </tbody>
+            </table>
+        </td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+  </div>
+</div>

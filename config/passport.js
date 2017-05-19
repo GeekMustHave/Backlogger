@@ -3,6 +3,8 @@
 
 // load all the things we need
 var LocalStrategy   = require('passport-local').Strategy;
+var BasicStrategy = require('passport-http').BasicStrategy;
+//Basic stragey is used for API Basci Authantication check
 
 // load up the user model
 var User = require('../models/user');
@@ -104,7 +106,7 @@ module.exports = function(passport) {
 
     passport.use('local-login', new LocalStrategy({
         // by default, local strategy uses username and password, we will override with email
-        usernameField : 'password',
+        usernameField : 'password', //this has to be changed to form field username when we turn on other users logins
         passwordField : 'password',
         passReqToCallback : true // allows us to pass back the entire request to the callback
     },
@@ -136,5 +138,30 @@ module.exports = function(passport) {
         });
 
     }));
-    
+    // =========================================================================
+    // BASIC STRATEGY API AUTHANTICATION LOGIN =============================================================
+    // =========================================================================
+    // we are NOT using named strategies since we have only one for BAsic  
+    passport.use('basic-login', new BasicStrategy(
+      function(username, password, callback) {
+        db.users.findOne({ 'username' :  username }, function(err, user) {
+          if (err) { return callback(err); }
+
+          // No user found with that username
+          if (!user) { return callback(null, false); }
+
+          var userRef = new User('','','','','');
+          // set the user's local credentials
+          userRef.password  = user.password;
+          // if the user is found but the password is wrong
+          if (!userRef.validPassword(password))
+           {
+             return callback(null, false); 
+           }
+          
+          // Success
+          return callback(null, user);
+        });
+      }
+    ));
 };

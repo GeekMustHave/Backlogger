@@ -18,6 +18,7 @@ var session = require('express-session');
 var indexRoutes = require('./routes/index');
 var backlogRoutes = require('./routes/rtbacklog');
 var users = require('./routes/users');
+//var apiRoutesV1 = require('./routes/api_v1');
 
 var app = express();
 
@@ -32,6 +33,7 @@ dbapp.appconstants.findOne({},function (err,item){
 	app.locals.ProjectTitle =  item.ProjectTitle;
 	app.locals.ContactEmail = item.ContactEmail;
 	app.locals.AdminPassword = item.AdminPassword;
+	app.locals.SuperAdminPassword = item.SuperAdminPassword;
 });
 
 
@@ -64,6 +66,7 @@ require('./config/passport')(passport); // pass passport for configuration
 // routes ======================================================================
 indexRoutes(app, passport); // load our routes and pass in our app and fully configured passport
 backlogRoutes(app, passport);
+//apiRoutesV1(app,passport);
 
 app.use('/users', users);
 

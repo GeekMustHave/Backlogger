@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><%= title %> Report</title> 
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <!-- load bootstrap css -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> 
+    <!-- load fontawesome -->
+
+	<!-- Latest compiled and minified CSS For bootstrap select-->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+	<!-- Date Range CSS -->
+	<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+	
+	<!-- favIcons Code -->
+	<link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png?v=1">
+	<link rel="icon" type="image/png" href="/favicons/favicon-32x32.png?v=1" sizes="32x32">
+	<link rel="icon" type="image/png" href="/favicons/favicon-16x16.png?v=1" sizes="16x16">
+	<link rel="manifest" href="/favicons/manifest.json?v=1">
+	<link rel="mask-icon" href="/favicons/safari-pinned-tab.svg?v=1" color="#5bbad5">
+	<link rel="shortcut icon" href="/favicons/favicon.ico?v=1">
+	<meta name="apple-mobile-web-app-title" content="Backlogger">
+	<meta name="application-name" content="Backlogger">
+	<meta name="msapplication-config" content="/favicons/browserconfig.xml?v=1">
+	<meta name="theme-color" content="#ffffff">
+
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+      <script src="javascripts/html5shiv.js"></script>
+      <script src="javascripts/respond.min.js"></script>
+    <![endif]-->
+
+  </head>
+  <body>
+  	<!--Navigation bar-->
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      
+        <a style="color:black;" class="navbar-brand" href="/">
+			<img src="/images/App_Logo_Transparent.png" alt="app logo"/> </span>
+			<%= title %>
+		</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/">Home</a></li>
+          <li class="active"><a href="/report">Report</a></li>
+          <li><a href="/logout">Logout</a></li>
+        </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="body-content">
+	    <!-- <h1><%= title %></h1> -->
+	    <h4>Welcome to <%= pageTitle %> Report</h4>
+  		<div class="container-fluid">
+  			<br />
+  			<div class="form-horizontal">
+			  <div class="form-group">
+			    <label for="inpBacklogDateRange" class="col-sm-2 control-label">Backlog Date Range:</label>
+			    <div class="col-sm-3">
+			    	<input id="inpBacklogDateRange" class="form-control" type="text" name="datefilter" value="" />
+			    </div>
+			    <label for="menuPersons" class="col-sm-2 control-label">Person:</label>
+			    <div class="col-sm-3">
+			    	<select class="selectpicker form-control" id="menuPersons">
+					  	  <option></option>
+					</select>
+			    </div>
+			    <div class="col-sm-2">
+			    </div>
+			  </div>
+			  <div class="form-group">
+			  	<label for="menuFunctionalAreas" class="col-sm-2 control-label">Functional Area:</label>
+			    <div class="col-sm-3">
+			    	<select class="selectpicker form-control" id="menuFunctionalAreas">
+					  	  <option></option>
+					</select>
+			    </div>
+			    <label for="inpIdea" class="col-sm-2 control-label">Idea:</label>
+			    <div class="col-sm-5">
+			      <input type="text" class="form-control" id="inpIdea" placeholder="search">
+			    </div>
+			  </div>
+			  <div class="form-group">
+			  	<label for="menuSortOn" class="col-sm-2 control-label">Sort On:</label>
+			    <div class="col-sm-3">
+			    	<select class="selectpicker form-control" id="menuSortOn">
+					  	  <option value=""></option>
+					  	  <option value="backlogdate">Backlog Date</option>
+					  	  <option value="functionalarea">Functional Area</option>
+					  	  <option value="idea">Idea</option>
+					  	  <option value="person">Person</option>
+					</select>
+			    </div>
+			    <label for="menuSortOrder" class="col-sm-2 control-label">Sort Order:</label>
+			    <div class="col-sm-3">
+			      <select class="selectpicker form-control" id="menuSortOrder">
+			      		<<option></option>
+					  	<option value="asc">Ascending</option>
+					  	<option value="desc">Descending</option>
+					</select>
+			    </div>
+			  </div>
+			  <div class="form-group">
+			    <div class="col-sm-offset-2 col-sm-10">
+			      	<button id="btnFilterBacklog" type="button" class="btn btn-primary">Filter</button>
+			      	<button id="btnResetFilterBacklog" type="button" class="btn btn-default">Reset Filters</button>
+					&nbsp;&nbsp;Please print using Ctrl+P command from your keyboard.
+			    </div>
+			  </div>
+			  <hr/>
+			</div>  
+  		</div>
+  		<div id="divBacklogRepeater">
+	    	<%- include('layouts/backlog', {backlogs: backlogs}) %>
+	    </div>
+ 	</div> <!-- Body content -->
+
+  	<!--Footer-->
+  	<footer id="footer" class="footer">
+      <div class="container text-center">
+	        © <%= new Date().getFullYear(); %>
+        	 <%= title %>.
+        	All rights reserved. <br />
+            Made with <span class="fa fa-heart pomegranate" style="color:red;"></span> 
+            by Phoenix Learning Labs in Lansing.
+      </div>
+    </footer>
+    <!--/ Footer-->
+
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+	<!-- Latest compiled and minified JavaScript -->
+	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<!-- Latest compiled and minified JavaScript for bootstrap select-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+	
+	<!-- Include Date Range Picker -->
+	<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+	<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+	<script type="text/javascript" src="/javascripts/report.js"></script>
+	<script type="text/javascript" src="/javascripts/ejs.min.js"></script>
+  </body>
+</html>

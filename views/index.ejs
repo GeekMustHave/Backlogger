@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
@@ -72,6 +72,7 @@
         <div class="collapse navbar-collapse" id="myNavbar">
         <ul class="nav navbar-nav navbar-right">
           <li class="active"><a href="/">Home</a></li>
+          <li><a href="/report">Report</a></li>
           <li><a href="/logout">Logout</a></li>
         </ul>
         </div>
@@ -101,14 +102,15 @@
                 <th>Details</th>
             </tr>
         </thead>
-        <!-- <tfoot>
+        <tfoot>
             <tr>
-            	<th>Backlog Date</th>
-                <th>Person</th>
-                <th>Functional Area</th>
-                <th>Idea</th>
+            	<th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
             </tr>
-        </tfoot> -->
+        </tfoot>
     </table>
     </div>
     <button type="submit"  data-toggle="modal" data-target="#mdlAddNew" class="btn btn-primary">Add New</button>
@@ -146,7 +148,7 @@
 	          <div class="form-group">
 	            <label for="backlogIdea" class="form-control-label col-xs-3">Idea:</label>
 	            <div class="col-xs-9">
-	            	<span id="backlogIdea"></span>
+	            	<div id="backlogIdea" style="max-height: 260px; overflow-y: scroll;"></div>
 	            </div>
 	          </div>
         	</form>
@@ -195,7 +197,7 @@
 	          <div class="form-group">
 	            <label for="txtAddBacklogIdea" style="margin-top:8px;" class="form-control-label col-xs-3">Idea:</label>
 	            <div class="col-xs-9">
-	            	<textarea class="form-control" rows="7" id="txtAddBacklogIdea"></textarea>
+	            	<textarea class="form-control" rows="7" cols="80" id="txtAddBacklogIdea"></textarea>
 	            </div>
 	          </div>
         	</form>
@@ -218,14 +220,14 @@
         </div>
         <div class="modal-body">
         	<div id="mdlCheckAdminPassErrorMessage" class=""></div>
-          	<form class="form-horizontal">
+          	<div class="form-horizontal">
           	  <div class="form-group">
 	            <label for="adminPassword" style="margin-top:8px;"  class="form-control-label col-xs-2">Password:</label>
 	            <div class="col-xs-10">
 	            	<input type="password" id="adminPassword" class="form-control" placeholder="Your Key">
 	            </div>
 	          </div>
-        	</form>
+        	</div>
         </div>
         <div class="modal-footer">
           <button id="btnCheckAdminPassword" type="button" class="btn btn-primary">OK</button>
@@ -240,74 +242,157 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Add Persons & Functioal areas.</h4>
+          <h4 class="modal-title">Admin Functionality</h4>
         </div>
         <div class="modal-body" style="padding-top:0px;">
-        	<div class="row">
-	  			<div class="col-md-6">
-		        	<h4> Persons</h4>
-		          	<div class="table-responsive"> 
-						<table id="tblPersons" class="table table-striped table-bordered" cellspacing="0" width="100%">
-					        <thead>
-					            <tr>
-					            	<th>Person</th>
-					            </tr>
-					        </thead>
-					    </table>
+        	<div id="carousel-example-generic" class="carousel slide" data-ride="carousel" data-interval="false">
+	        	<!-- Wrapper for slides -->
+	  			<div class="carousel-inner">
+		  			<div class="item active">
+			        	<div class="row">
+				  			<div class="col-md-6">
+					        	<h4> Persons</h4>
+					          	<div class="table-responsive"> 
+									<table id="tblPersons" class="table table-striped table-bordered" cellspacing="0" width="100%">
+								        <thead>
+								            <tr>
+								            	<th>Person</th>
+								            </tr>
+								        </thead>
+								    </table>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<h4> Functional Areas</h4>
+								<div class="table-responsive"> 
+									<table id="tblFuncAreas" class="table table-striped table-bordered" cellspacing="0" width="100%">
+								        <thead>
+								            <tr>
+								            	<th>Functional Area</th>
+								            </tr>
+								        </thead>
+								    </table>
+								</div>
+							</div>
+						</div>
+						<hr style="margin-top: 5px;margin-bottom:10px;" />
+						<div class="row">
+							<div class="col-md-6">
+							   <div id="mdlAddPersonErrorMessage" class=""></div>
+							   <form class="form-horizontal">
+								  <div class="form-group">
+								    <label for="txtAddNewPerson" style="margin-top:8px;"  class="form-control-label col-xs-2">Person:</label>
+								    <div class="col-xs-10">
+								    	<input type="text" id="txtAddNewPerson" class="form-control" placeholder="Enter a person name">
+								    </div>
+							  	  </div>
+							  	  <div class="form-group">
+							  	  	<div class="col-xs-2">
+							  	  	</div>
+							  	  	<div class="col-xs-10">
+							  	  		<button type="button" class="btn btn-primary" id="btnAddNewPerson">Add Person</button>
+							  	  	</div>
+							  	  </div>
+								</form>
+							</div>
+							<div class="col-md-6">
+								<div id="mdlAddFuncAreaErrorMessage" class=""></div>
+								<form class="form-horizontal">
+								  <div class="form-group">
+								    <label for="txtAddNewFuncArea" style="margin-top:8px;"  class="form-control-label col-xs-2">Area:</label>
+								    <div class="col-xs-10">
+								    	<input type="text" id="txtAddNewFuncArea" class="form-control" placeholder="Enter a functional area">
+								    </div>
+							  	  </div>
+							  	  <div class="form-group">
+							  	  	<div class="col-xs-2">
+							  	  	</div>
+							  	  	<div class="col-xs-10">
+							  	  		<button type="button" class="btn btn-primary" id="btnAddNewFuncArea">Add Area</button>
+							  	  	</div>
+							  	  </div>
+								</form>
+							</div>
+						</div>
+						<hr style="margin-top: 0px;margin-bottom:10px;" />
+						<div class="row">
+							<div class="col-md-12 text-center">
+								<button class="btn btn-primary" data-target="#carousel-example-generic" data-slide-to="1">Go To Database Actions</button>
+							</div>
+						</div>
+					</div> <!-- item -->
+					<div class="item">
+						<div class="row">
+			          	  <div class="col-md-offset-2 col-md-8 text-center" style="padding-top:20px;">
+			          	  	<div id="divErrorSuperAdminPassword" class=""></div>
+			          	  	<!-- <form class="form-horizontal"> -->
+							  <div class="form-group">
+							    <label for="superadminpassword" class="col-sm-4 control-label">Enter Key:</label>
+							    <div class="col-sm-4">
+							      <input type="password" class="form-control" id="superadminpassword" placeholder="Super Admin Key">
+							    </div>
+							    <div class="col-sm-2">
+							    	<button id="btnVerifySuperAdmin" type="button" class="btn btn-primary">Verify</button>
+							    </div>
+							  </div>
+							<!-- </form> -->
+				          </div>
+				          <div class="col-md-2">
+				          </div>
+						</div>
+						<hr />
+						<div class="row" readonly>
+							<div class="col-md-6">
+					        	<h4><u> Database Backup</u></h4>
+						        <div class="form-group">
+							    	<label for="btnDBBackup" class="col-sm-4 control-label">Backup:</label>
+							    	<div class="col-sm-8">
+							    		<form action="/getbackup" method="post">
+							    		    <button id="btnDBBackup" type="submit" class="btn btn-primary disabled">Get Backup</button>
+							    		</form>
+							    	</div>
+							    </div>
+							</div>
+							<div class="col-md-6">
+								<h4><u>Database Reset</u></h4>
+								<form class="form-horizontal">
+								  <div class="form-group">
+								    <label class="col-sm-5">Select Dataset(s):</label>
+								    <div class="col-sm-7">
+								    	<div class="checkbox">
+										  <label>
+										  	<input id="chkBacklog" type="checkbox" value="backlog">Backlog
+										  </label>
+										</div>
+								    	<div class="checkbox">
+										  <label>
+										    <input id="chkFunctionalArea" type="checkbox" value="functionalarea">Functional Area
+										  </label>
+										</div>
+								    	<div class="checkbox">
+										  <label>
+										    <input id="chkPerson" type="checkbox" value="person">Person
+										  </label>
+										</div>
+								    </div>
+								  </div>
+  								  <div class="form-group">
+								    <div class="col-sm-offset-5 col-sm-7">
+								      <button id="btnDBReset" type="buttom" class="btn btn-primary disabled">Reset</button>
+								    </div>
+								  </div>
+								</form>
+							</div>
+						</div>
+						<hr />
+						<div class="row">
+							<div class="col-md-12 text-center">
+								<button class="btn btn-primary" data-target="#carousel-example-generic" data-slide-to="0">Go To Application Actions</button>
+							</div>
+						</div>
 					</div>
-				</div>
-				<div class="col-md-6">
-					<h4> Functional Areas</h4>
-					<div class="table-responsive"> 
-						<table id="tblFuncAreas" class="table table-striped table-bordered" cellspacing="0" width="100%">
-					        <thead>
-					            <tr>
-					            	<th>Functional Area</th>
-					            </tr>
-					        </thead>
-					    </table>
-					</div>
-				</div>
-			</div>
-			<hr />
-			<div class="row">
-				<div class="col-md-6">
-				   <div id="mdlAddPersonErrorMessage" class=""></div>
-				   <form class="form-horizontal">
-					  <div class="form-group">
-					    <label for="txtAddNewPerson" style="margin-top:8px;"  class="form-control-label col-xs-2">Person:</label>
-					    <div class="col-xs-10">
-					    	<input type="text" id="txtAddNewPerson" class="form-control" placeholder="Enter a person name">
-					    </div>
-				  	  </div>
-				  	  <div class="form-group">
-				  	  	<div class="col-xs-2">
-				  	  	</div>
-				  	  	<div class="col-xs-10">
-				  	  		<button type="button" class="btn btn-primary" id="btnAddNewPerson">Add Person</button>
-				  	  	</div>
-				  	  </div>
-					</form>
-				</div>
-				<div class="col-md-6">
-					<div id="mdlAddFuncAreaErrorMessage" class=""></div>
-					<form class="form-horizontal">
-					  <div class="form-group">
-					    <label for="txtAddNewFuncArea" style="margin-top:8px;"  class="form-control-label col-xs-2">Area:</label>
-					    <div class="col-xs-10">
-					    	<input type="text" id="txtAddNewFuncArea" class="form-control" placeholder="Enter a functional area">
-					    </div>
-				  	  </div>
-				  	  <div class="form-group">
-				  	  	<div class="col-xs-2">
-				  	  	</div>
-				  	  	<div class="col-xs-10">
-				  	  		<button type="button" class="btn btn-primary" id="btnAddNewFuncArea">Add Area</button>
-				  	  	</div>
-				  	  </div>
-					</form>
-				</div>
-			</div>
+				</div> <!-- carousel-inner -->
+			</div> <!-- carousel -->
         </div>
         <!-- <div class="modal-footer">
           <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -321,7 +406,7 @@
   <footer id="footer" class="footer">
       <div class="container text-center">
 	        © <%= new Date().getFullYear(); %>
-        	 <%= title %>
+        	 <%= title %>.
         	All rights reserved. <br />
             Made with <span class="fa fa-heart pomegranate" style="color:red;"></span> 
             by Phoenix Learning Labs in Lansing.
@@ -341,6 +426,7 @@
 	<!-- Latest compiled and minified JavaScript for bootstrap select-->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
 
+	<script type="text/javascript" src="/javascripts/dateformat.js"></script>
 	<script type="text/javascript" src="/javascripts/backlogger.js"></script>
   </body>
 </html>

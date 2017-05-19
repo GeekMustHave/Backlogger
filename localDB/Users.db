@@ -1,2 +1,3 @@
+{"firstname":"Guest","lastname":"User","username":"backlogger","email":"backloggerapi@backlogger.com","password":"$2a$08$wKt3v/D2BIsE7NbdYinxo..yY6iPSsGSuYeKkBblJzIFMbkwBeYfu","_id":"YLCTqCdkd5iqyh0n"}
 {"firstname":"Guest","lastname":"User","username":"guestuser@backlogger.com","email":"guestuser@backlogger.com","password":"$2a$08$0T4.5MbEWfm72zdke5U2VOBIit0u/ct0v4IYf4f028kEsiVcCaXm6","_id":"mur72QkQ20fD2Ag2"}
 {"$$indexCreated":{"fieldName":"email","unique":false,"sparse":false}}

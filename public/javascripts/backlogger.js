@@ -13,28 +13,36 @@ $(function() {
                 return json;
             }
         },
+        "order": [[ 0, "desc" ]],
         "processing" :true,
         "columns" : [ {
             "data" : "insertdate",
+            "width": "auto",
             "render": function (data) {
                 var date = new Date(data);
-                return getDateFormatted(date);
+                return dateFormat(date, "mm/dd/yyyy h:MM:ss TT");
+                //return getDateFormatted(date);
             }
         }, {
-            "data" : "person"
+            "data" : "person",
+            "width": "auto"
+
         }, {
-            "data" : "functionalarea"
+            "data" : "functionalarea",
+            "width" : "auto"
         }, {
             "data" : "idea",
+            "width" : "auto",
             "render": function(data){
-                var rtnString = data.substring(0, 25);
-                if (data.length > 25 ) rtnString = rtnString + ' ....';
+                var rtnString = data.substring(0, 95);
+                if (data.length > 95 ) rtnString = rtnString + ' ....';
                 return rtnString;
             }
         },{
             "data" : "_id",
+            "width": "auto",
             "render": function(data){
-                return '<a data-toggle="modal" data-target="#mdlViewDetails" data-backlogid="'+ data + '" href="#">View Details</a>';
+                return '<button style="padding-top:5px !important;padding-bottom:5px;" class="btn btn-primary" data-toggle="modal" data-target="#mdlViewDetails" data-backlogid="'+ data + '" href="#">View Details</a>';
                 //return '<a href="/backlogss"> View Details</a>';
             }
         }]
@@ -56,6 +64,26 @@ $(function() {
             }
             , 'pageLength'
         ]
+        ,initComplete: function () {
+            this.api().columns([1, 2]).every( function () {
+                var column = this;
+                var select = $('<select><option value=""></option></select>')
+                    .appendTo( $(column.footer()).empty() )
+                    .on( 'change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+ 
+                        column
+                            .search( val ? '^'+val+'$' : '', true, false )
+                            .draw();
+                    } );
+
+                column.data().unique().sort().each( function ( d, j ) {
+                    select.append( '<option value="'+d+'">'+d+'</option>' )
+                } );
+            } );
+        }
     });
     rePaintJsGridButtons();
 
@@ -78,7 +106,8 @@ $(function() {
             modal.find('.modal-body #backlogDate').text(getDateFormatted(date));
             modal.find('.modal-body #backlogPerson').text(response.person);
             modal.find('.modal-body #backlogFuncArea').text(response.functionalarea);
-            modal.find('.modal-body #backlogIdea').text(response.idea);
+            var txtHtml = response.idea.replace(/(\r\n|\n|\r)/g,"<br />");
+            modal.find('.modal-body #backlogIdea').html(txtHtml);
         });
     });
 
@@ -97,14 +126,14 @@ $(function() {
                 url: "/persons",
                 dataType: "json"
             }).done(function(response) {
-            if($('#menuPersons > option').length == 1){
-                $.each(response, function(key,value) {
-                    //alert(value.com);
-                    //<li role="presentation"><a role="menuitem" href="#">HTML</a></li>
-                    var liHtml = '<option>'+ value.name +'</option>';
-                    $("#menuPersons").append(liHtml);
-                });
-            }
+            $("#menuPersons option").remove();
+            $("#menuPersons").append('<option></option>');
+            $.each(response, function(key,value) {
+                //alert(value.com);
+                //<li role="presentation"><a role="menuitem" href="#">HTML</a></li>
+                var liHtml = '<option>'+ value.name +'</option>';
+                $("#menuPersons").append(liHtml);
+            });
             $('#menuPersons').selectpicker('refresh');
         });
         $.ajax({
@@ -112,14 +141,14 @@ $(function() {
                 url: "/functionalareas",
                 dataType: "json"
             }).done(function(response) {
-            if($('#menuFuncArea > option').length == 1){
-                $.each(response, function(key,value) {
-                    //alert(value.com);
-                    //<li role="presentation"><a role="menuitem" href="#">HTML</a></li>
-                    var liHtml = '<option>'+ value.name +'</option>';
-                    $("#menuFuncArea").append(liHtml);
-                });
-            }
+            $("#menuFuncArea option").remove();
+            $("#menuFuncArea").append('<option></option>');
+            $.each(response, function(key,value) {
+                //alert(value.com);
+                //<li role="presentation"><a role="menuitem" href="#">HTML</a></li>
+                var liHtml = '<option>'+ value.name +'</option>';
+                $("#menuFuncArea").append(liHtml);
+            });
             $('#menuFuncArea').selectpicker('refresh');
         });
     });
@@ -180,6 +209,81 @@ $(function() {
             }
         });
     });
+
+    // Super Admin Verification Code
+    $("#btnVerifySuperAdmin").click(function(event){
+        event.preventDefault();
+        var data = {};
+        data.superadminpass = $('#superadminpassword').val();
+        $.ajax({
+            type: 'POST',
+            url: '/checksuperadminpwd',
+            data: data,
+            dataType: 'json'
+        }).done(function (response){
+            if(response.isValid){
+                // Clear the form.
+                $('#superadminpassword').val('');
+                $("#divErrorSuperAdminPassword").removeClass('alert alert-danger');
+                $("#divErrorSuperAdminPassword").addClass('alert alert-success');
+                $("#divErrorSuperAdminPassword").text('Thank you. You many now perform DB Actions.!');
+                $("#btnDBBackup").removeClass('disabled');
+                $("#btnDBReset").removeClass('disabled');
+            }else{
+                $("#divErrorSuperAdminPassword").removeClass('alert alert-success');
+                $("#divErrorSuperAdminPassword").addClass('alert alert-danger');
+                $("#divErrorSuperAdminPassword").text('Super Admin Key incorrect.!');
+                // Clear the form.
+                $('#superadminpassword').val('');
+            }
+        });
+    });
+    // btnDBReset - Database Reset Code
+    $("#btnDBReset").click(function(event){
+        event.preventDefault();
+        var data = {};
+        if ($("#chkPerson").is(':checked'))
+            data.person = true;
+        if ($("#chkFunctionalArea").is(':checked'))
+            data.functionalarea = true;
+        if ($("#chkBacklog").is(':checked'))
+            data.backlog = true;
+        if(!$("#chkPerson").is(':checked') && !$("#chkFunctionalArea").is(':checked') &&  !$("#chkBacklog").is(':checked')){
+            $("#divErrorSuperAdminPassword").removeClass('alert alert-success');
+            $("#divErrorSuperAdminPassword").addClass('alert alert-danger');
+            $("#divErrorSuperAdminPassword").text('Select atleast one checkbox.');
+            return;
+        }
+        $.ajax({
+            type: 'POST',
+            url: '/dbreset',
+            data: data,
+            dataType: 'json'
+        }).done(function (response){
+            if(response.isSuccess){
+                // Clear the form.
+                $("#divErrorSuperAdminPassword").removeClass('alert alert-danger');
+                $("#divErrorSuperAdminPassword").addClass('alert alert-success');
+                $("#divErrorSuperAdminPassword").text(response.message);
+                //update the Persons, Functional Areas or Backlog Grids.
+                if ($("#chkPerson").is(':checked'))
+                    tablePersons();
+                if ($("#chkFunctionalArea").is(':checked'))
+                    tableFunctionalAreas();
+                if ($("#chkBacklog").is(':checked'))
+                    tableBacklogs.ajax.reload();
+                //Clear the Input values
+                $( "#chkPerson" ).prop( "checked", false );
+                $( "#chkFunctionalArea" ).prop( "checked", false );
+                $( "#chkBacklog" ).prop( "checked", false );
+            }else{
+                $("#divErrorSuperAdminPassword").removeClass('alert alert-success');
+                $("#divErrorSuperAdminPassword").addClass('alert alert-danger');
+                $("#divErrorSuperAdminPassword").text(response.message);
+            }
+        });
+    });
+
     $('#mdlAdminPassword').on('show.bs.modal', function (event) {
         $("#mdlCheckAdminPassErrorMessage").removeClass('alert alert-danger');
         $("#mdlCheckAdminPassErrorMessage").text('');
@@ -198,6 +302,9 @@ $(function() {
         $("#mdlAddFuncAreaErrorMessage").removeClass('alert alert-danger');
         $("#mdlAddFuncAreaErrorMessage").removeClass('alert alert-success');
         $("#mdlAddFuncAreaErrorMessage").text('');
+        $("#divErrorSuperAdminPassword").removeClass('alert alert-danger');
+        $("#divErrorSuperAdminPassword").removeClass('alert alert-success');
+        $("#divErrorSuperAdminPassword").text('')
     });
 
     $("#btnAddNewPerson").click(function(event){
@@ -249,6 +356,7 @@ $(function() {
         }
     });
 });
+
 var rePaintJsGridButtons = function(){
     $('.dt-button.customRefresh').each(function() {
         $(this).removeClass('dt-button customRefresh').addClass('btn btn-primary')

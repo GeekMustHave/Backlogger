@@ -1,6 +1,9 @@
-"use strict"
+"use strict";
 
 module.exports = function(app, passport) {
+
+    //app.use('/api/v1', require('api_v1.js')(app,passport));
+
 	// =====================================
     // HOME PAGE (with Logout links) ========
     // =====================================
@@ -9,17 +12,15 @@ module.exports = function(app, passport) {
         res.render('index', { 
         						title: req.app.locals.AppTitle, 
         						pageTitle: req.app.locals.ProjectTitle,
-        						user : req.user 
+        						user : req.user
         						// get the user out of session and pass to template  
         					});
     });
-
     // =====================================
     // LOGIN ===============================
     // =====================================
     // show the login form
     app.get('/login', function(req, res) {
-
         // render the page and pass in any flash data if it exists
         res.render('account/login.ejs', { 
         	message: req.flash('loginMessage'),
@@ -60,7 +61,6 @@ module.exports = function(app, passport) {
     //     res.render('account/signup.ejs', { message: req.flash('signupMessage') });
     // });
 
-
     // process the signup form
     app.post('/signup', passport.authenticate('local-signup', {
         successRedirect : '/', // redirect to the secure profile section
@@ -95,7 +95,7 @@ function isLoggedIn(req, res, next) {
 
     // if user is authenticated in the session, carry on 
     if (req.isAuthenticated()){
-    	console.log('yes its authenticated');
+    	//console.log('yes its authenticated');
         return next();
     }
     // if they aren't redirect them to the home page
