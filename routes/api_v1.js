@@ -12,14 +12,60 @@ module.exports = function(app, passport, db) {
     // ===============================================
     app.get('/api/v1/backlogs', passport.authenticate('basic-login', { session : false }), function(req, res, next) {
         // You need to load each database (here we do it asynchronously)
+
+        var filters ={};
+        if(req.query.person && req.query.person !='')
+            filters.person = req.query.person;
+        if(req.query.functionalarea && req.query.functionalarea !='')
+            filters.functionalarea = req.query.functionalarea;
+        if(req.query.idea && req.query.idea != '')
+            filters.idea = new RegExp(req.query.idea, 'i');
+        if(req.query.daterange && req.query.daterange !=''){
+            var dates = req.query.daterange.split(" - ");
+            var strtDate = new Date(momentJS(dates[0], 'MM-DD-YYYY').format('YYYY/MM/DD'));
+            var endDate = new Date(momentJS(dates[1], 'MM-DD-YYYY').add(1,'days').format('YYYY/MM/DD'));
+            filters.insertdate = { $gte : strtDate, $lt : endDate};
+        }
+        if(req.query.resolved && req.query.resolved !=''){
+            if(req.query.resolved == 'no'){
+                filters.resolveddate = null;
+            }
+            else{
+                filters.resolveddate = { $ne: null};
+            }
+        }
+        var sortfilter ={};
+        if(req.query.sortfield && req.query.sortfield !=''){
+            var sortField = req.query.sortfield;
+            var sortOrder = 1;
+            if(req.query.sortorder && req.query.sortorder !=''){
+                if(req.query.sortorder == 'desc')
+                    sortOrder = -1;
+                else
+                    sortOrder = 1;
+            }
+            switch(sortField){
+                case 'person':
+                    var sortfilter = { person : sortOrder};
+                    break;
+                case 'functionalarea':
+                    sortfilter = { functionalarea: sortOrder};
+                    break;
+                case 'idea':
+                    sortfilter = { idea: sortOrder};
+                    break;
+                case 'backlogdate':
+                    sortfilter = { insertdate: sortOrder};
+                    break;
+            }
+        }
         db.backlogs.loadDatabase();
-        db.backlogs.find({}).sort({insertdate: -1}).exec(function(err, items) {
-        	if (err) {
-		      console.error(err);
-		      res.statusCode = 500;
-		      return res.json({ errors: ['Internal Error-Could not retrieve BackLogs'] });
-		    }
-		    res.statusCode = 200;
+        db.backlogs.find(filters).sort(sortfilter).exec(function(err, items) {
+            if (err) {
+              res.statusCode = 500;
+              return res.json({ errors: ['Internal Error-Could not retrieve BackLogs'] });
+            }
+            res.statusCode = 200;
             res.json(items);
         });
     });
