@@ -165,9 +165,7 @@ $(function() {
     //submit Ajax call to update resolved date
     $("#btnUpdateResolved").click(function(event) {
         event.preventDefault();
-        var backlogId = $("#btnUpdateResolved").data('backlogid');
-        console.log('--- I CAME EHERE');
-        console.log(backlogId);
+        var backlogId = $("#btnUpdateResolved").attr('data-backlogid');
         var data = {};
         data.resolveddate =  getDateFormatted(new Date());
         $.ajax({
@@ -176,7 +174,6 @@ $(function() {
             data: data,
             dataType: 'json'
         }).done(function (response){
-            console.log(response);
             //We are cheating instead of reloading from DB. change this in future if custom resolved date is needed.
             //finally update the Resolved Date to today and disable the button.
             var modal = $('#mdlViewDetails');
