@@ -11,6 +11,30 @@ $(function() {
         PresetControls();
         FilterBacklogs();
     });
+
+    // Update BAcklog - has to be duplicated for NOW. 
+    // change Update BAcklog on backlogger.js too
+    //submit Ajax call to update resolved date
+    $("#btnUpdateResolved").click(function(event) {
+        event.preventDefault();
+        var backlogId = $("#btnUpdateResolved").attr('data-backlogid');
+        var data = {};
+        data.resolveddate =  getDateFormatted(new Date());
+        $.ajax({
+            type: 'PATCH',
+            url: "/backlogs/" + backlogId,
+            data: data,
+            dataType: 'json'
+        }).done(function (response){
+            //We are cheating instead of reloading from DB. change this in future if custom resolved date is needed.
+            //finally update the Resolved Date to today and disable the button.
+            var modal = $('#mdlViewDetails');
+            var resolvedDate = getDateFormatted(new Date());
+            modal.find('.modal-body #resolvedDate').text(resolvedDate);
+            $('#btnUpdateResolved').hide();
+            FilterBacklogs();
+        });
+    });
 });
 function FilterBacklogs(){
     var data = {};
@@ -21,7 +45,6 @@ function FilterBacklogs(){
     data.sortfield = $('#menuSortOn').val();
     data.sortorder = $('#menuSortOrder').val();
     data.resolved = $('#menuResolved').val();
-    console.log(data);
     $.ajax({
         type: 'GET',
         url: '/backlogsfilterandsort',

@@ -6,8 +6,16 @@
     <% backlogs.forEach(function(backlog){ %>
       <tr>
       	<td>
-        	<table style="width:100%;">
+        	<table style="width:100%;" border="0">
           	<tbody>
+                <tr>
+                  <td align="right" style="width:15%;font-weight:bold;padding-right:20px;">
+                    REF #:
+                  </td>
+                  <td colspan="3">
+                    <%=  backlog._id.substr(backlog._id.length - 4) %>
+                  </td>
+                </tr>
                 <tr>
                   <td align="right" style="width:15%;font-weight:bold;padding-right:20px;">
                   	Backlog Date:
@@ -29,7 +37,7 @@
                   <td>
                     <%= backlog.functionalarea %>
                   </td>
-                  <td align="right" style="font-weight:bold;">
+                  <td align="right" style="font-weight:bold;width:15%;">
                     Resolved Date:
                   </td>
                   <td style="padding-left:20px;">
@@ -54,6 +62,9 @@
                 
               </tbody>
             </table>
+        </td>
+        <td style="width:5%; vertical-align: middle !important;">
+            <button style="padding-top:5px !important;padding-bottom:5px;" class="btn btn-primary" data-toggle="modal" data-target="#mdlViewDetails" data-backlogid="<%= backlog._id %>" href="#">View Details</button>
         </td>
       </tr>
       <% }); %>

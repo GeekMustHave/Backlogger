@@ -58,5 +58,4 @@ a {
   text-align: middle;
 }
 
-
-
+th.dt-body-center, td.dt-body-center { text-align: center; }

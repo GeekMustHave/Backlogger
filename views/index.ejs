@@ -95,16 +95,20 @@
 	<table id="tblBacklogs" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
             <tr>
+            	<th>REF#</th>
             	<th>Backlog Date</th>
                 <th>Person</th>
                 <th>Functional Area</th>
                 <th>Idea</th>
+                <th>Resolved</th>
                 <th>Details</th>
             </tr>
         </thead>
         <tfoot>
             <tr>
             	<th></th>
+            	<th></th>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -115,59 +119,9 @@
     </div>
     <button type="submit"  data-toggle="modal" data-target="#mdlAddNew" class="btn btn-primary">Add New</button>
     <button type="submit" data-toggle="modal" data-target="#mdlAdminPassword" class="btn btn-primary">Admin</button>
+  <!-- Modal For Backlog Details -->
+  	<%- include('layouts/backlogDetailsPopUp') %>
   <!-- Modal -->
-  <div class="modal fade" id="mdlViewDetails" role="dialog">
-    <div class="modal-dialog">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Modal Header</h4>
-        </div>
-        <div class="modal-body">
-          	<form class="form-horizontal">
-	          <div class="form-group">
-	            <label for="backlogDate" class="form-control-label col-xs-3">Backlog Date:</label>
-	            <div class="col-xs-9">
-	            	<span id="backlogDate"></span>
-	            </div>
-	          </div>
-	          <div class="form-group">
-	            <label for="backlogDate" class="form-control-label col-xs-3">Resolved Date:</label>
-	            <div class="col-xs-9">
-	            	<span id="resolvedDate"></span>
-	            </div>
-	          </div>
-	          <div class="form-group">
-	            <label for="backlogPerson" class="form-control-label col-xs-3">Person:</label>
-	            <div class="col-xs-9">
-	            	<span id="backlogPerson"></span>
-	            </div>
-	          </div>
-	          <div class="form-group">
-	            <label for="backlogFuncArea" class="form-control-label col-xs-3">Functional Area:</label>
-	            <div class="col-xs-9">
-	            	<span id="backlogFuncArea"></span>
-	            </div>
-	          </div>
-	          <div class="form-group">
-	            <label for="backlogIdea" class="form-control-label col-xs-3">Idea:</label>
-	            <div class="col-xs-9">
-	            	<div id="backlogIdea" style="max-height: 260px; overflow-y: scroll;"></div>
-	            </div>
-	          </div>
-        	</form>
-        </div>
-        <div class="modal-footer">
-          <button id="btnUpdateResolved" type="button" class="btn btn-primary">Resolve</button>
-          &nbsp;
-          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-    <!-- Modal -->
   <div class="modal fade" id="mdlAddNew" role="dialog">
     <div class="modal-dialog">
     
@@ -431,10 +385,12 @@
 	
 	<script type="text/javascript" src="https://cdn.datatables.net/select/1.2.1/js/dataTables.select.min.js"></script>
 	<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.2.4/js/dataTables.buttons.min.js"></script>
+	<script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.15/sorting/custom-data-source/dom-checkbox.js"></script>
 	<!-- Latest compiled and minified JavaScript for bootstrap select-->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
 
 	<script type="text/javascript" src="/javascripts/dateformat.js"></script>
 	<script type="text/javascript" src="/javascripts/backlogger.js"></script>
+	<script type="text/javascript" src="/javascripts/backloggerDetailsPopUp.js"></script>
   </body>
 </html>

@@ -13,9 +13,20 @@ $(function() {
                 return json;
             }
         },
-        "order": [[ 0, "desc" ]],
+        "columnDefs": [
+            {"className": "dt-body-center", "targets": [5]}
+        ],
+        "order": [[ 1, "desc" ]],
         "processing" :true,
         "columns" : [ {
+            "data" : "_id",
+            "width": "auto",
+            "render": function (data) {
+                //Display only the last 4 charaters of the GUID
+                return data.substr(data.length - 4)
+            }
+
+        }, {
             "data" : "insertdate",
             "width": "auto",
             "render": function (data) {
@@ -39,10 +50,26 @@ $(function() {
                 return rtnString;
             }
         },{
+            "data" : "resolveddate",
+            "width": "auto",
+            "orderDataType": "dom-checkbox",
+            render: function ( data, type, row ) {
+                if(type === "display" || type === "filter" ){
+                    if(data){
+                        return '<div class="checkbox"><input type="checkbox" checked value="1" /></div>';
+                    }else{
+                        return '<div class="checkbox"><input type="checkbox" unchecked value="0" /></div>';
+                    }
+                }else{
+                    if(data) return 1;
+                        else return 0;
+                }
+            }
+        },{
             "data" : "_id",
             "width": "auto",
             "render": function(data){
-                return '<button style="padding-top:5px !important;padding-bottom:5px;" class="btn btn-primary" data-toggle="modal" data-target="#mdlViewDetails" data-backlogid="'+ data + '" href="#">View Details</a>';
+                return '<button style="padding-top:5px !important;padding-bottom:5px;" class="btn btn-primary" data-toggle="modal" data-target="#mdlViewDetails" data-backlogid="'+ data + '" href="#">View Details</button>';
                 //return '<a href="/backlogss"> View Details</a>';
             }
         }]
@@ -65,7 +92,7 @@ $(function() {
             , 'pageLength'
         ]
         ,initComplete: function () {
-            this.api().columns([1, 2]).every( function () {
+            this.api().columns([2, 3]).every( function () {
                 var column = this;
                 var select = $('<select><option value=""></option></select>')
                     .appendTo( $(column.footer()).empty() )
@@ -83,43 +110,51 @@ $(function() {
                     select.append( '<option value="'+d+'">'+d+'</option>' )
                 } );
             } );
+            //For custom checkbox filter
+            this.api().columns([5]).every(function (){
+                var column = this;
+                var checkbox = $('<select><option value=""></option><option value="1">Yes</option><option value="0">No</option></select>')
+                    .appendTo( $(column.footer()).empty() )
+                    .on('change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+                        column
+                            .search( val)
+                            .draw();
+                    } );
+            });
         }
     });
     rePaintJsGridButtons();
 
-    $('#mdlViewDetails').on('show.bs.modal', function (event) {
-        var retData;
-        var button = $(event.relatedTarget); // Button that triggered the modal
-        var backlogId = button.data('backlogid'); // Extract info from data-* attributes
-        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-        $.ajax({
-                type: "GET",
-                url: "/backlogs/" + backlogId,
-                dataType: "json"
-            }).done(function(response) {
-            //d.resolve(response);
-            //retData = response;
-            var modal = $('#mdlViewDetails');
-            var date = new Date(response.insertdate);
-            var resolvedDate = '';
+    // View details is now used from BackloggerDetailsPopup.js 
 
-            $('#btnUpdateResolved').attr('data-backlogid', backlogId);
-            if (response.resolveddate != null){
-                resolvedDate = getDateFormatted(new Date(response.resolveddate));
-                $('#btnUpdateResolved').hide();
-            }
-            else
-                $('#btnUpdateResolved').show();
-            modal.find('.modal-title').text('Backlog Details');
-            modal.find('.modal-body #backlogDate').text(getDateFormatted(date));
+
+    // Update BAcklog - has to be duplicated for NOW. 
+    // change Update BAcklog on report.js too
+    // submit Ajax call to update resolved date
+    $("#btnUpdateResolved").click(function(event) {
+        event.preventDefault();
+        var backlogId = $("#btnUpdateResolved").attr('data-backlogid');
+        var data = {};
+        data.resolveddate =  getDateFormatted(new Date());
+        $.ajax({
+            type: 'PATCH',
+            url: "/backlogs/" + backlogId,
+            data: data,
+            dataType: 'json'
+        }).done(function (response){
+            //We are cheating instead of reloading from DB. change this in future if custom resolved date is needed.
+            //finally update the Resolved Date to today and disable the button.
+            var modal = $('#mdlViewDetails');
+            var resolvedDate = getDateFormatted(new Date());
             modal.find('.modal-body #resolvedDate').text(resolvedDate);
-            modal.find('.modal-body #backlogPerson').text(response.person);
-            modal.find('.modal-body #backlogFuncArea').text(response.functionalarea);
-            var txtHtml = response.idea.replace(/(\r\n|\n|\r)/g,"<br />");
-            modal.find('.modal-body #backlogIdea').html(txtHtml);
+            $('#btnUpdateResolved').hide();
+            tableBacklogs.ajax.reload( null, false );
         });
     });
+
 
     $('#mdlAddNew').on('show.bs.modal', function (event) {
         
@@ -161,27 +196,6 @@ $(function() {
             });
             $('#menuFuncArea').selectpicker('refresh');
         });
-    });
-    //submit Ajax call to update resolved date
-    $("#btnUpdateResolved").click(function(event) {
-        event.preventDefault();
-        var backlogId = $("#btnUpdateResolved").attr('data-backlogid');
-        var data = {};
-        data.resolveddate =  getDateFormatted(new Date());
-        $.ajax({
-            type: 'PATCH',
-            url: "/backlogs/" + backlogId,
-            data: data,
-            dataType: 'json'
-        }).done(function (response){
-            //We are cheating instead of reloading from DB. change this in future if custom resolved date is needed.
-            //finally update the Resolved Date to today and disable the button.
-            var modal = $('#mdlViewDetails');
-            var resolvedDate = getDateFormatted(new Date());
-            modal.find('.modal-body #resolvedDate').text(resolvedDate);
-            $('#btnUpdateResolved').hide();
-        });
-         
     });
 
     //Form submit Ajax call
